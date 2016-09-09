@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : name_check.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_NAME_CHECK ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="NameCheck">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_NAME_CHECK ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_NAME_CHECK
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.CHECK_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_NAME_CHECK ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT CHECK_SEQ    -- 일련번호 
+             , CI           -- 식별번호 
+             , PHONE_NO     -- 폰번호 
+             , PHONE_CORP   -- 통신사 
+             , BIRTHDAY     -- 생년월일 
+             , GENDER       -- 성별 
+             , CHECK_NAME   -- 이름 
+             , CERT_MET     -- 확인방법 
+             , IP           -- 이용자 IP 
+             , NATION       -- 내_외국인 
+             , M_CHECK_NAME -- 미성년_이름 
+             , M_BIRTHDAY   -- 미만_생일 
+             , M_GENDER     -- 미만_성별 
+             , M_NATION     -- 미만_국가 
+             , USER_SEQ     -- 사용자 코드
+          FROM TB_NAME_CHECK
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.CHECK_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_NAME_CHECK ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT CHECK_SEQ    -- 일련번호  
+             , CI           -- 식별번호  
+             , PHONE_NO     -- 폰번호  
+             , PHONE_CORP   -- 통신사  
+             , BIRTHDAY     -- 생년월일  
+             , GENDER       -- 성별  
+             , CHECK_NAME   -- 이름  
+             , CERT_MET     -- 확인방법  
+             , IP           -- 이용자 IP  
+             , NATION       -- 내_외국인  
+             , M_CHECK_NAME -- 미성년_이름  
+             , M_BIRTHDAY   -- 미만_생일  
+             , M_GENDER     -- 미만_성별  
+             , M_NATION     -- 미만_국가  
+             , USER_SEQ     -- 사용자 코드
+          FROM TB_NAME_CHECK
+		 WHERE CHECK_SEQ = #{check_seq} 
+    </select>    
+
+    <!-- ( TB_NAME_CHECK ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_NAME_CHECK ( CHECK_SEQ, CI, PHONE_NO, PHONE_CORP, BIRTHDAY, GENDER, CHECK_NAME, CERT_MET, IP, NATION, M_CHECK_NAME, M_BIRTHDAY, M_GENDER, M_NATION, USER_SEQ )
+        VALUES ( #{check_seq}, #{ci}, #{phone_no}, #{phone_corp}, #{birthday}, #{gender}, #{check_name}, #{cert_met}, #{ip}, #{nation}, #{m_check_name}, #{m_birthday}, #{m_gender}, #{m_nation}, #{user_seq} )
+    </insert>
+
+    <!-- ( TB_NAME_CHECK ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_NAME_CHECK
+           SET CI           = #{ci} 
+             , PHONE_NO     = #{phone_no} 
+             , PHONE_CORP   = #{phone_corp} 
+             , BIRTHDAY     = #{birthday} 
+             , GENDER       = #{gender} 
+             , CHECK_NAME   = #{check_name} 
+             , CERT_MET     = #{cert_met} 
+             , IP           = #{ip} 
+             , NATION       = #{nation} 
+             , M_CHECK_NAME = #{m_check_name} 
+             , M_BIRTHDAY   = #{m_birthday} 
+             , M_GENDER     = #{m_gender} 
+             , M_NATION     = #{m_nation} 
+             , USER_SEQ     = #{user_seq} 
+         WHERE CHECK_SEQ = #{check_seq} 
+    </update>
+    
+    <!-- ( TB_NAME_CHECK ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_NAME_CHECK
+         WHERE CHECK_SEQ = #{check_seq}
+    </delete>
+     
+</mapper>

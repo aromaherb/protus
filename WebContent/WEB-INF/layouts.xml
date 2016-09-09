@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+	<!-- inc헤더영역, inc푸터 영역등 공통적으로 들어가는 부분을 위해 추가함. -->
+
+	<definition name="layouts-tiles" template="/WEB-INF/views/layout/layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/header.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/layout/footer.jsp" />
+	</definition>
+
+	<definition name="layouts-admin" template="/WEB-INF/views/layout/layout_admin.jsp">
+		<put-attribute name="content" value="" />
+	</definition>
+	<definition name="layouts-admin_main" template="/WEB-INF/views/layout/layout_admin_main.jsp">
+		<put-attribute name="left_admin_mobile" value="/WEB-INF/views/layout/left_admin_mobile.jsp" />
+		<put-attribute name="left_admin" value="/WEB-INF/views/layout/left_admin.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/layout/footer_admin.jsp" />
+	</definition>
+
+	<!-- 현재 아래의 auth/* 과 */*.admin_main 만 사용함 : layouts-admin_main 도 작동함 장재현 -->
+
+	<definition name="*/*.admin" extends="layouts-admin">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+	<definition name="*/*.base" extends="layouts-admin">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+	<!-- 만 작동함 : 위의 layouts-tiles-login 도 작동함 장재현 -->
+	<definition name="*/*.admin_main" extends="layouts-admin_main">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+</tiles-definitions>

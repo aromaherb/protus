@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : problem.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_PROBLEM ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Problem">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_PROBLEM ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_PROBLEM
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.PROBLEM_SEQ = #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_PROBLEM ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT a.PROBLEM_FILE -- 문제파일
+             , a.PROBLEM_SEQ  -- 난제일련번호 
+             , a.USER_SEQ     -- 글쓴이 
+             , a.CONTENT      -- 내용 
+             , a.SUBJECT      -- 과목 
+             , a.WRITE_DT -- 작성일시 
+             , a.SOLV_FILE    -- 풀이과정
+             , a.PROBLEM_TITLE -- 문의제목
+             , b.PROBLEM_REPLY_SEQ -- 답변여부
+          FROM TB_PROBLEM a left outer join TB_PROBLEM_REPLY_TEMP b on a.PROBLEM_SEQ = b.PROBLEM_SEQ
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.PROBLEM_SEQ = #{search_word} || '%'
+			     </if>
+          </where>
+          ORDER BY PROBLEM_SEQ DESC 
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_PROBLEM ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        
+        SELECT a.PROBLEM_FILE -- 문제파일 
+             , a.PROBLEM_SEQ  -- 난제일련번호 
+             , a.USER_SEQ     -- 글쓴이
+             , a.CONTENT      -- 내용 
+             , a.SUBJECT      -- 과목 
+             , IF(a.WRITE_DT,date_format(WRITE_DT,'%Y-%m-%d'),'') WRITE_DT -- 작성일시  
+             , a.SOLV_FILE    -- 풀이과정
+             , a.PROBLEM_TITLE -- 문의제목
+             , b.PROBLEM_REPLY_SEQ -- 답변여부
+             , b.USER_SEQ as USER_SEQ2
+             , b.REPLY
+        	 , b.REPLY_FILE
+        	 , b.REPLY_DT as REPLY_DT2
+          FROM TB_PROBLEM a left outer join TB_PROBLEM_REPLY_TEMP b on a.PROBLEM_SEQ = b.PROBLEM_SEQ
+		 WHERE a.PROBLEM_SEQ = #{problem_seq} 
+    </select>    
+
+    <!-- ( TB_PROBLEM ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_PROBLEM ( PROBLEM_FILE,  USER_SEQ, CONTENT, SUBJECT, WRITE_DT, SOLV_FILE, PROBLEM_TITLE )
+        VALUES ( #{problem_file},  #{user_seq}, #{content}, #{subject}, #{write_dt}, #{solv_file}, #{problem_title} )
+    </insert>
+
+    <!-- ( TB_PROBLEM ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_PROBLEM
+           SET PROBLEM_SEQ  = #{problem_seq} 
+             , USER_SEQ     = #{user_seq} 
+             , CONTENT      = #{content} 
+             , SUBJECT      = #{subject} 
+             , WRITE_DT     = #{write_dt} 
+             , SOLV_FILE    = #{solv_file}
+             , PROBLEM_TITLE = #{problem_title}
+         WHERE PROBLEM_SEQ = #{problem_seq} 
+    </update>
+    
+    <!-- ( TB_PROBLEM ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_PROBLEM
+         WHERE PROBLEM_SEQ = #{problem_seq}
+    </delete>
+     
+</mapper>

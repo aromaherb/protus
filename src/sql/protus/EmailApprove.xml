@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : email_approve.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_EMAIL_APPROVE ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="EmailApprove">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_EMAIL_APPROVE ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_EMAIL_APPROVE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_EMAIL_APPROVE ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT USER_SEQ     -- 사용자 코드 
+             , REQUEST_DATE -- 요청일자 
+             , APPROVE_DATE -- 승인일자 
+             , EMAIL        -- 이메일
+          FROM TB_EMAIL_APPROVE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_EMAIL_APPROVE ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT USER_SEQ     -- 사용자 코드  
+             , REQUEST_DATE -- 요청일자  
+             , APPROVE_DATE -- 승인일자  
+             , EMAIL        -- 이메일
+          FROM TB_EMAIL_APPROVE
+		 WHERE USER_SEQ = #{user_seq} 
+    </select>    
+
+    <!-- ( TB_EMAIL_APPROVE ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_EMAIL_APPROVE ( USER_SEQ, REQUEST_DATE, APPROVE_DATE, EMAIL )
+        VALUES ( #{user_seq}, #{request_date}, #{approve_date}, #{email} )
+    </insert>
+
+    <!-- ( TB_EMAIL_APPROVE ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_EMAIL_APPROVE
+           SET REQUEST_DATE = #{request_date} 
+             , APPROVE_DATE = #{approve_date} 
+             , EMAIL        = #{email} 
+         WHERE USER_SEQ = #{user_seq} 
+    </update>
+    
+    <!-- ( TB_EMAIL_APPROVE ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_EMAIL_APPROVE
+         WHERE USER_SEQ = #{user_seq}
+    </delete>
+     
+</mapper>

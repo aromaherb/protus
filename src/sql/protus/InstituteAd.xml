@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : institute_ad.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_INSTITUTE_AD ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="InstituteAd">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_INSTITUTE_AD ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_INSTITUTE_AD
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.INSTITUTE_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_INSTITUTE_AD ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT INSTITUTE_SEQ    -- 학원일련번호 
+             , INSTITUTE_SLOGAN -- 슬로건
+          FROM TB_INSTITUTE_AD
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.INSTITUTE_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_INSTITUTE_AD ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT INSTITUTE_SEQ    -- 학원일련번호  
+             , INSTITUTE_SLOGAN -- 슬로건
+          FROM TB_INSTITUTE_AD
+		 WHERE INSTITUTE_SEQ = #{institute_seq} 
+    </select>    
+
+    <!-- ( TB_INSTITUTE_AD ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_INSTITUTE_AD ( INSTITUTE_SEQ, INSTITUTE_SLOGAN )
+        VALUES ( #{institute_seq}, #{institute_slogan} )
+    </insert>
+
+    <!-- ( TB_INSTITUTE_AD ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_INSTITUTE_AD
+           SET INSTITUTE_SLOGAN = #{institute_slogan} 
+         WHERE INSTITUTE_SEQ = #{institute_seq} 
+    </update>
+    
+    <!-- ( TB_INSTITUTE_AD ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_INSTITUTE_AD
+         WHERE INSTITUTE_SEQ = #{institute_seq}
+    </delete>
+     
+</mapper>

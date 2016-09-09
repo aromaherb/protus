@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : tb_code.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-2-10
+ * 내  용 : ( tb_code ) 의 목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Code">
+<!-- 필요한 쿼리 추가할 것 -->
+<!-- 기본 제공 수정,삭제하지말고 추가하여 사용-->
+
+    <!--  ( tb_code ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+        FROM TB_CODE
+        WHERE CODE <![CDATA[<>]]> '00000'
+        <if test="group_code != null and ( group_code neq ''.toString() )">
+            AND GROUP_CODE = #{group_code}
+        </if>
+        <if test="group_code == null or ( group_code eq ''.toString() )">
+        	AND GROUP_CODE = '0'
+        </if>
+        <if test="search_type eq 'search_name'">
+            AND CODE_NAME like concat('%',#{search_word},'%') 
+        </if>
+    </select>
+    
+    <!--  ( tb_code ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+		SELECT 
+			GROUP_CODE,
+			CODE,
+			CODE_NAME,
+			V_VALUE,
+			V_VALUE1,
+			N_VALUE,
+			N_VALUE1,
+			D_VALUE
+		FROM TB_CODE
+		WHERE CODE <![CDATA[<>]]> '00000'
+        <if test="group_code != null and ( group_code neq ''.toString() )">
+            AND GROUP_CODE = #{group_code}
+        </if>
+        <if test="search_type eq 'search_name'">
+            AND CODE_NAME like concat('%',#{search_word},'%') 
+        </if>
+        
+		limit  #{start_of_page}  , #{cnt_per_page}   
+	
+    </select>
+    
+    <!--  ( tb_code ) 정보조회 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT 
+            GROUP_CODE,
+            CODE,
+            CODE_NAME,
+            V_VALUE,
+            V_VALUE1,
+            N_VALUE,
+            N_VALUE1,
+            D_VALUE
+        FROM TB_CODE
+        WHERE GROUP_CODE = #{group_code}
+        AND CODE = #{code}
+    </select>
+    
+    <select id="selectCodeSeq" parameterType="hashmap" resultType="String" useCache="false" flushCache="true">
+    	SELECT CONCAT(#{codeSeq}, LPAD(COALESCE(MAX(SUBSTRING(CODE, 3, 3))+1,1),3,'0')) FROM tb_code WHERE group_code=#{group_code}
+    </select>
+
+    <!-- ( tb_code ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_CODE (
+            GROUP_CODE,
+            CODE,
+            CODE_NAME,
+            V_VALUE,
+            V_VALUE1,
+            <if test="n_value != null and ( n_value neq ''.toString() )">
+            N_VALUE,
+            </if>
+            <if test="n_value1 != null and ( n_value1 neq ''.toString() )">
+            N_VALUE1,
+            </if>
+            D_VALUE 
+        )
+        VALUES ( 
+            #{group_code}, 
+			#{code},
+			#{code_name},
+			#{v_value},
+			#{v_value1},
+			<if test="n_value != null and ( n_value neq ''.toString() )">
+			#{n_value},
+			</if>
+			<if test="n_value1 != null and ( n_value1 neq ''.toString() )">
+			#{n_value1},
+			</if>
+			#{d_value}
+		)
+    </insert>
+
+    <!-- ( tb_code ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE tb_code
+           SET 
+           <if test="code_name != null and ( code_name neq ''.toString() )"> 
+               CODE_NAME          = #{code_name}, 
+           </if>  
+           <if test="v_value != null and ( v_value neq ''.toString() )">
+               V_VALUE            = #{v_value},
+           </if>
+           <if test="v_value1 != null and ( v_value1 neq ''.toString() )">
+               V_VALUE1            = #{v_value1},
+           </if>
+           <if test="n_value != null and ( n_value neq ''.toString() )">
+               N_VALUE            = #{n_value},
+           </if>
+           <if test="n_value1 != null and ( n_value1 neq ''.toString() )">
+               N_VALUE1            = #{n_value1},
+           </if>
+           <if test="d_value != null and ( d_value neq ''.toString() )">
+               D_VALUE            = #{d_value}
+           </if> 
+           WHERE GROUP_CODE = #{group_code}
+           AND CODE = #{code} 
+    </update>
+    
+    <!-- ( tb_code ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_CODE
+        WHERE GROUP_CODE = #{group_code}
+        AND CODE = #{code}
+    </delete>
+</mapper>

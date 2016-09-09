@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : area.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_AREA ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Area">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_AREA ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_AREA
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.AREA_CD LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_AREA ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT AREA_CD   -- 지역코드 
+             , AREA_NAME -- 지역명
+          FROM TB_AREA
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.AREA_CD LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_AREA ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT AREA_CD   -- 지역코드  
+             , AREA_NAME -- 지역명
+          FROM TB_AREA
+		 WHERE AREA_CD = #{area_cd} 
+    </select>    
+
+    <!-- ( TB_AREA ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_AREA ( AREA_CD, AREA_NAME )
+        VALUES ( #{area_cd}, #{area_name} )
+    </insert>
+
+    <!-- ( TB_AREA ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_AREA
+           SET AREA_NAME = #{area_name} 
+         WHERE AREA_CD = #{area_cd} 
+    </update>
+    
+    <!-- ( TB_AREA ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_AREA
+         WHERE AREA_CD = #{area_cd}
+    </delete>
+     
+</mapper>

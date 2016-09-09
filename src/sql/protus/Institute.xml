@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : institute.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_INSTITUTE ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Institute">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_INSTITUTE ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_INSTITUTE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.INSTITUTE_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_INSTITUTE ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT INSTITUTE_SEQ  -- 학원일련번호 
+             , INSTITUTE_NAME -- 학원명 
+             , ZIP_CODE       -- 우편번호 
+             , ADDRESS        -- 주소 
+             , ADDRESS_SUB    -- 주소상세 
+             , REGISTER_NUM   -- 사업자 등록번호 
+             , TEL            -- 연락처 
+             , INSTITUTE_CD   -- 학원코드 
+             , BANK           -- 계좌은행 
+             , ACCOUNT_HOLDER -- 예금주 
+             , ACCOUNT_NO     -- 계좌번호 
+             , CEO            -- 대표자 이름 
+             , AREA_CD        -- 지역코드
+          FROM TB_INSTITUTE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.INSTITUTE_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_INSTITUTE ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT INSTITUTE_SEQ  -- 학원일련번호  
+             , INSTITUTE_NAME -- 학원명  
+             , ZIP_CODE       -- 우편번호  
+             , ADDRESS        -- 주소  
+             , ADDRESS_SUB    -- 주소상세  
+             , REGISTER_NUM   -- 사업자 등록번호  
+             , TEL            -- 연락처  
+             , INSTITUTE_CD   -- 학원코드  
+             , BANK           -- 계좌은행  
+             , ACCOUNT_HOLDER -- 예금주  
+             , ACCOUNT_NO     -- 계좌번호  
+             , CEO            -- 대표자 이름  
+             , AREA_CD        -- 지역코드
+          FROM TB_INSTITUTE
+		 WHERE INSTITUTE_SEQ = #{institute_seq} 
+    </select>    
+
+    <!-- ( TB_INSTITUTE ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_INSTITUTE ( INSTITUTE_SEQ, INSTITUTE_NAME, ZIP_CODE, ADDRESS, ADDRESS_SUB, REGISTER_NUM, TEL, INSTITUTE_CD, BANK, ACCOUNT_HOLDER, ACCOUNT_NO, CEO, AREA_CD )
+        VALUES ( #{institute_seq}, #{institute_name}, #{zip_code}, #{address}, #{address_sub}, #{register_num}, #{tel}, #{institute_cd}, #{bank}, #{account_holder}, #{account_no}, #{ceo}, #{area_cd} )
+    </insert>
+
+    <!-- ( TB_INSTITUTE ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_INSTITUTE
+           SET INSTITUTE_NAME = #{institute_name} 
+             , ZIP_CODE       = #{zip_code} 
+             , ADDRESS        = #{address} 
+             , ADDRESS_SUB    = #{address_sub} 
+             , REGISTER_NUM   = #{register_num} 
+             , TEL            = #{tel} 
+             , INSTITUTE_CD   = #{institute_cd} 
+             , BANK           = #{bank} 
+             , ACCOUNT_HOLDER = #{account_holder} 
+             , ACCOUNT_NO     = #{account_no} 
+             , CEO            = #{ceo} 
+             , AREA_CD        = #{area_cd} 
+         WHERE INSTITUTE_SEQ = #{institute_seq} 
+    </update>
+    
+    <!-- ( TB_INSTITUTE ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_INSTITUTE
+         WHERE INSTITUTE_SEQ = #{institute_seq}
+    </delete>
+     
+</mapper>

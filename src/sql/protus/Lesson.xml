@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : lesson.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_LESSON ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Lesson">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_LESSON ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_LESSON
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.LESSON_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_LESSON ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT LESSON_SEQ       -- 강의 일련번호 
+             , LESSON_TITLE     -- 강의제목 
+             , LESSON_CONTENT   -- 강의소개 
+             , LESSON_VIDEO     -- 강의동영상 
+             , COURSE           -- 과정 
+             , SUBJECT          -- 과목 
+             , CATEGORY         -- 유형 
+             , CHARGE_YN        -- 과금여부 
+             , IF(CLOSE_DATE,date_format(CLOSE_DATE,'%Y-%m-%d'),'') CLOSE_DATE -- 종료일시  
+             , RESERVE_CLOSE_YN -- 종료예약 
+             , CLOSE_YN         -- 종료여부 
+             , LESSON_PRICE     -- 강의료 
+             , USER_SEQ         -- 사용자 코드 
+             , LESSON_DOC       -- 강의자료 
+             , IF(WRITE_DT,date_format(WRITE_DT,'%Y-%m-%d'),'') WRITE_DT -- 작성일시  
+             , IF(MODIFY_DT,date_format(MODIFY_DT,'%Y-%m-%d'),'') MODIFY_DT -- 수정일시  
+             , APPROVE_YN       -- 승인여부 
+             , IF(APPROVE_DT,date_format(APPROVE_DT,'%Y-%m-%d'),'') APPROVE_DT -- 승인일시
+          FROM TB_LESSON
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.LESSON_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          ORDER BY LESSON_SEQ DESC 
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_LESSON ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT LESSON_SEQ       -- 강의 일련번호  
+             , LESSON_TITLE     -- 강의제목  
+             , LESSON_CONTENT   -- 강의소개  
+             , LESSON_VIDEO     -- 강의동영상  
+             , COURSE           -- 과정  
+             , SUBJECT          -- 과목  
+             , CATEGORY         -- 유형  
+             , CHARGE_YN        -- 과금여부  
+             , IF(CLOSE_DATE,date_format(CLOSE_DATE,'%Y-%m-%d'),'') CLOSE_DATE -- 종료일시  
+             , RESERVE_CLOSE_YN -- 종료예약  
+             , CLOSE_YN         -- 종료여부  
+             , LESSON_PRICE     -- 강의료  
+             , USER_SEQ         -- 사용자 코드  
+             , LESSON_DOC       -- 강의자료  
+             , IF(WRITE_DT,date_format(WRITE_DT,'%Y-%m-%d'),'') WRITE_DT -- 작성일시  
+             , IF(MODIFY_DT,date_format(MODIFY_DT,'%Y-%m-%d'),'') MODIFY_DT -- 수정일시  
+             , APPROVE_YN       -- 승인여부  
+             , IF(APPROVE_DT,date_format(APPROVE_DT,'%Y-%m-%d'),'') APPROVE_DT -- 승인일시
+          FROM TB_LESSON
+		 WHERE LESSON_SEQ = #{lesson_seq} 
+    </select>    
+
+    <!-- ( TB_LESSON ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_LESSON ( LESSON_TITLE, LESSON_CONTENT, LESSON_VIDEO, COURSE, SUBJECT, CATEGORY, CHARGE_YN, CLOSE_DATE, RESERVE_CLOSE_YN, CLOSE_YN, LESSON_PRICE, USER_SEQ, LESSON_DOC, WRITE_DT, APPROVE_YN, APPROVE_DT )
+        VALUES ( #{lesson_title}, #{lesson_content}, #{lesson_video}, #{course}, #{subject}, #{category}, #{charge_yn}, #{close_date}, #{reserve_close_yn}, #{close_yn}, #{lesson_price}, #{user_seq}, #{lesson_doc},NOW(), #{approve_yn}, #{approve_dt} )
+    </insert>
+    
+    <insert id="insertFile" parameterType="hashmap">
+    	INSERT INTO TB_FILES (
+    		LESSON_SEQ,	FILE_KEY_W, FILE_KEY_I, FILE_KEY_A, FILE_KEY_M, MEDIA_KEY
+    	) VALUES (
+    		#{lesson_seq}, #{file_key_W}, #{file_key_I}, #{file_key_A}, #{file_key_A}, #{media_key}
+    	)
+    </insert>
+
+    <!-- ( TB_LESSON ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_LESSON
+           SET LESSON_TITLE     = #{lesson_title} 
+             , LESSON_CONTENT   = #{lesson_content} 
+             , LESSON_VIDEO     = #{lesson_video} 
+             , COURSE           = #{course} 
+             , SUBJECT          = #{subject} 
+             , CATEGORY         = #{category} 
+             , CHARGE_YN        = #{charge_yn} 
+             , CLOSE_DATE       = #{close_date} 
+             , RESERVE_CLOSE_YN = #{reserve_close_yn} 
+             , CLOSE_YN         = #{close_yn} 
+             , LESSON_PRICE     = #{lesson_price} 
+             , LESSON_DOC       = #{lesson_doc}
+             , MODIFY_DT        = NOW()
+             , APPROVE_YN       = #{approve_yn} 
+             , APPROVE_DT       = #{approve_dt} 
+         WHERE LESSON_SEQ = #{lesson_seq} 
+    </update>
+    
+    <!-- ( TB_LESSON ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_LESSON
+         WHERE LESSON_SEQ = #{lesson_seq}
+    </delete>
+     
+</mapper>

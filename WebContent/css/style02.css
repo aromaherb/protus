@@ -1,0 +1,133 @@
+.login{position:relative; float:right;  width:350px; margin:10px 250px;}
+.login_text{float:left; width:600px; height:auto; padding-left:20px; margin:10px 0 20px; }
+
+.login .id {
+	margin-bottom: 10px; 
+/* ------- 로그인 콘텐츠 ---------- */ 
+.login h3 {
+	padding: 10px 0 16px 12px;
+}
+.login .id, .login .pw {
+	margin-left: 18px; /* 아이디와 비밀번호 이미지와 왼쪽 간격 */
+}
+/* 아이디와 비밀번호 영역 사이의 여백 */
+}
+.login .id label {
+	padding-right:11px; /* 아이디와 비밀번호 이미지 가로 크기의 차이 */
+}
+.login #logemail,.login #logid, .login #logpw {
+	width:200px;
+	height:24px; /* 전체는 20px이나 상, 하 border 2px 값을 제하고 적용 */
+	border: 1px solid #b4b4b4;
+	margin-left:25px;
+
+	/* label과 input 사이 간격, 빈 칸이 있으므로 그 영역 만큼 제외한 2px 만큼 여백 설정. 2px을 적용 */
+}
+.login label img {
+	margin-top:4px;
+	/* label의 이미지 상단에 여백을 두어 input과 정렬되어 보이도록 합니다 */
+}
+.login .btnLogin {
+	position: absolute;	
+	top: 0px;
+	right:25px;
+}
+.memberInfo {
+	margin:9px 23px 0 19px; /* line 93~94 = margin과 padding 영역 사이에 border 위치 */
+	padding-top:8px;
+	padding-bottom:17px;
+	border-top:1px solid #dedede;
+	text-align:right;
+}
+.memberInfo a {
+	padding-left:10px;
+	color:#686868;
+	letter-spacing:-0.1em;
+	
+}
+.memberInfo a:hover, .memberInfo a:focus {
+	text-decoration:underline;
+}
+.memberInfo a.join {
+	padding-right:5px;  /* 회원가입과 아이디/비밀번호 찾기 링크 사이 간격 */
+}
+
+
+
+.member_ul{clear:both;position:relative;height:20px; background:url(../images/img/bg_p.gif) repeat-x 0 bottom; width:720px; 
+margin:10px 0 10px 10px; font-size:14px; 
+font-weight:bold; color:#ed3d07;solid #cdd0d8; padding:5px 10px;  }
+.member_ul input{position:absolute; float:right;right:20px; top:8px;}
+
+.ul_sub .table02 input{margin:2px;}
+.ul_sub{margin:0 auto;}
+.members {background:url(../images/img/img_bg.gif) no-repeat 0 0; margin:0 auto 200px; width:790px; height:290px;}
+.members p{position:relative; top: 80px; left: 50px;text-align:center; line-height:45px; font-size:18px; font-weight:bold; color:#777;}
+
+.members p span{font-size:28px;color:#2856ff; margin:10px; border-bottom:1px solid #fe7624; padding:3px 15px;}
+
+
+
+#menu_m1 {position:relative; clear:both;top:10px;float:left;width:750px;line-height:1.5;border-bottom:2px solid #055689; 
+font-weight:bold; font-size:13px; letter-spacing:-1px; text-align:center;}
+#menu_m1 ul {margin:0;padding:10px 0 0 0;list-style:none;}
+#menu_m1 li {display:inline;margin:0;padding:0;}
+#menu_m1 a {float:left;background:url(../images/sub/imgbg_left.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m1 a span {float:left;display:block;background:url(../images/sub/imgbg_right.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#969da1; }
+
+#menu_m1 a:hover span {color:#969da1;}
+#menu_m1 a:hover {float:left;background:url(../images/sub/imgbg_left_on.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m1 a:hover span {float:left;display:block;background:url(../images/sub/imgbg_right_on.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#fff;}
+#menu_m1 .current a {float:left;background:url(../images/sub/imgbg_left_on.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m1 .current a span {float:left;display:block;background:url(../images/sub/imgbg_right_on.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#fff;}
+
+#menu_m2 {position:relative; clear:both;top:10px;float:left;width:850px;line-height:1.5;border-bottom:2px solid #055689; 
+font-weight:bold; font-size:13px; letter-spacing:-1px; text-align:center;}
+#menu_m2 ul {margin:0;padding:10px 0 0 0;list-style:none;}
+#menu_m2 li {display:inline;margin:0;padding:0;}
+#menu_m2 a {float:left;background:url(../images/sub/imgbg_left.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m2 a span {float:left;display:block;background:url(../images/sub/imgbg_right.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#969da1; }
+
+#menu_m2 a:hover span {color:#969da1;}
+#menu_m2 a:hover {float:left;background:url(../images/sub/imgbg_left_on.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m2 a:hover span {float:left;display:block;background:url(../images/sub/imgbg_right_on.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#fff;}
+#menu_m2 .current a {float:left;background:url(../images/sub/imgbg_left_on.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m2 .current a span {float:left;display:block;background:url(../images/sub/imgbg_right_on.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#fff;}
+
+
+
+#menu_m1_id {position:relative; clear:both;top:10px;float:left;width:750px;line-height:1.5em;border-bottom:2px solid #055689; 
+font-weight:bold; font-size:13px; letter-spacing:-1px; text-align:center; margin:0 auto; margin-left:125px;}
+#menu_m1_id ul {margin:0;padding:10px 0 0 0;list-style:none;}
+#menu_m1_id li {display:inline;margin:0;padding:0;}
+#menu_m1_id a {float:left;background:url(../images/sub/imgbg_left.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m1_id a span {float:left;display:block;background:url(../images/sub/imgbg_right.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#969da1; }
+
+#menu_m1_id a:hover span {color:#969da1;}
+#menu_m1_id a:hover {float:left;background:url(../images/sub/imgbg_left_on.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m1_id a:hover span {float:left;display:block;background:url(../images/sub/imgbg_right_on.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#fff;}
+#menu_m1_id .current a {float:left;background:url(../images/sub/imgbg_left_on.gif) no-repeat left top;margin:0;
+padding:0 0 0 5px;text-decoration:none;}
+#menu_m1_id .current a span {float:left;display:block;background:url(../images/sub/imgbg_right_on.gif) no-repeat right top;
+padding:10px 25px 6px 21px;color:#fff;}
+
+.imgback{background-color:#f2f7fb;  border:1px solid #d8e6f0;padding:10px;}
+.file{background:url(../images/img/btn_20.gif) no-repeat -2px -3px; width:87px; height:21px;}
+.spanBox span{display:block; width:120px; height:24px; background:url(../images/img/tab_bg02.gif) no-repeat 0 0 ;
+font-weight:bold; font-size:14px; color:#ec4e00; text-align:center;  padding-top:2px; margin: 10px 0 5px 0;}

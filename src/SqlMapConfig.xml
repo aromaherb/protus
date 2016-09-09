@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<environments default="mysql">
+		<environment id="mysql">
+			<transactionManager type="JDBC" />
+			<!-- 
+			<dataSource type="JNDI">
+			 <property name="dataSource" value="java:comp/env/jdbc/mysql_kpf" />
+			</dataSource>
+			 -->
+			 
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				
+				<!-- 동네학원 테스트 서버는 아이디,DB 변경필요함	-->
+				<property name="url" value="jdbc:mysql://211.110.140.93:3306/protus?autoReconnect=true" />
+				<property name="username" value="root" />
+				<property name="password" value="slkedu0818!!" /> 						
+				
+				<property name="poolPingQuery" value="select 1"/>
+				<property name="poolPingEnabled" value="true"/>
+				<property name="poolPingConnectionsNotUsedFor" value="43200"/>
+				<property name="poolMaximumCheckoutTime" value="20000"/>				
+				<property name="poolMaximumActiveConnections" value="50"/>
+				<property name="poolMaximumIdleConnections" value="10"/>
+			</dataSource>
+			
+		</environment>
+		
+	</environments>
+	
+	<mappers>
+		
+		<mapper resource="sql/base/Code.xml" />
+		<mapper resource="sql/protus/User.xml" />
+		<mapper resource="sql/protus/Area.xml" />
+		<mapper resource="sql/protus/CfData.xml" />
+		<mapper resource="sql/protus/Community.xml" />
+		<mapper resource="sql/protus/CommunityReply.xml" />
+		<mapper resource="sql/protus/EmailApprove.xml" />
+		<mapper resource="sql/protus/Event.xml" />
+		<mapper resource="sql/protus/Institute.xml" />
+		<mapper resource="sql/protus/InstituteAd.xml" />
+		<mapper resource="sql/protus/InstituteImage.xml" />
+		<mapper resource="sql/protus/InstituteNotice.xml" />
+		<mapper resource="sql/protus/InstituteStudent.xml" />
+		<mapper resource="sql/protus/InstituteTeacher.xml" />
+		<mapper resource="sql/protus/Lesson.xml" />
+		<mapper resource="sql/protus/NameCheck.xml" />
+		<mapper resource="sql/protus/Note.xml" />
+		<mapper resource="sql/protus/Notice.xml" />
+		<mapper resource="sql/protus/Problem.xml" />
+		<mapper resource="sql/protus/Promotion.xml" />
+		<mapper resource="sql/protus/User.xml" />
+		<mapper resource="sql/protus/UserLesson.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : note.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_NOTE ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Note">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_NOTE ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_NOTE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.NOTE_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_NOTE ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT NOTE_SEQ      -- 쪽지 번호 
+             , USER_SEQ      -- 보낸이 
+             , RECEIVER_SEQ  -- 받는이 
+             , OPEN_YN       -- 읽기여부 
+             , NOTE_SUBJECT  -- 쪽지내용 
+             , REPLY_SUBJECT -- 답장내용 
+             , REPLY_YN      -- 답장여부 
+             , NOTE_DT -- 쪽지일시 
+             , REPLY_DT -- 답장일시
+          FROM TB_NOTE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.NOTE_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_NOTE ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT NOTE_SEQ      -- 쪽지 번호  
+             , USER_SEQ      -- 보낸이  
+             , RECEIVER_SEQ  -- 받는이  
+             , OPEN_YN       -- 읽기여부  
+             , NOTE_SUBJECT  -- 쪽지내용  
+             , REPLY_SUBJECT -- 답장내용  
+             , REPLY_YN      -- 답장여부  
+             , IF(NOTE_DT,date_format(NOTE_DT,'%Y-%m-%d'),'') NOTE_DT -- 쪽지일시  
+             , IF(REPLY_DT,date_format(REPLY_DT,'%Y-%m-%d'),'') REPLY_DT -- 답장일시
+          FROM TB_NOTE
+		 WHERE NOTE_SEQ = #{note_seq} 
+    </select>    
+
+    <!-- ( TB_NOTE ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_NOTE ( NOTE_SEQ, USER_SEQ, RECEIVER_SEQ, OPEN_YN, NOTE_SUBJECT, REPLY_SUBJECT, REPLY_YN, NOTE_DT, REPLY_DT )
+        VALUES ( #{note_seq}, #{user_seq}, #{receiver_seq}, #{open_yn}, #{note_subject}, #{reply_subject}, #{reply_yn}, #{note_dt}, #{reply_dt} )
+    </insert>
+
+    <!-- ( TB_NOTE ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_NOTE
+           SET USER_SEQ      = #{user_seq} 
+             , RECEIVER_SEQ  = #{receiver_seq} 
+             , OPEN_YN       = #{open_yn} 
+             , NOTE_SUBJECT  = #{note_subject} 
+             , REPLY_SUBJECT = #{reply_subject} 
+             , REPLY_YN      = #{reply_yn} 
+             , NOTE_DT       = #{note_dt} 
+             , REPLY_DT      = #{reply_dt} 
+         WHERE NOTE_SEQ = #{note_seq} 
+    </update>
+    
+    <!-- ( TB_NOTE ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_NOTE
+         WHERE NOTE_SEQ = #{note_seq}
+    </delete>
+     
+</mapper>

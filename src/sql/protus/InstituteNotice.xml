@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : institute_notice.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_INSTITUTE_NOTICE ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="InstituteNotice">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_INSTITUTE_NOTICE ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_INSTITUTE_NOTICE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.NOTICE_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.NOTICE_TITLE LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_INSTITUTE_NOTICE ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT NOTICE_SEQ     -- 공지일련번호 
+             , NOTICE_TITLE   -- 공지제목 
+             , NOTICE_CONTENT -- 내용 
+             , WRITE_DATE     -- 일자 
+             , INSTITUTE_SEQ  -- 학원일련번호
+          FROM TB_INSTITUTE_NOTICE
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.NOTICE_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.NOTICE_TITLE LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+          ORDER BY NOTICE_SEQ DESC 
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_INSTITUTE_NOTICE ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT NOTICE_SEQ     -- 공지일련번호  
+             , NOTICE_TITLE   -- 공지제목  
+             , NOTICE_CONTENT -- 내용  
+             , WRITE_DATE     -- 일자  
+             , INSTITUTE_SEQ  -- 학원일련번호
+          FROM TB_INSTITUTE_NOTICE
+		 WHERE NOTICE_SEQ = #{notice_seq} 
+           AND NOTICE_TITLE = #{notice_title} 
+    </select>    
+
+    <!-- ( TB_INSTITUTE_NOTICE ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_INSTITUTE_NOTICE ( NOTICE_TITLE, NOTICE_CONTENT, WRITE_DATE, INSTITUTE_SEQ )
+        VALUES ( #{notice_title}, #{notice_content}, #{write_date}, #{institute_seq} )
+    </insert>
+
+    <!-- ( TB_INSTITUTE_NOTICE ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_INSTITUTE_NOTICE
+           SET NOTICE_CONTENT = #{notice_content} 
+             , WRITE_DATE     = #{write_date} 
+             , INSTITUTE_SEQ  = #{institute_seq} 
+         WHERE NOTICE_SEQ   = #{notice_seq} 
+           AND NOTICE_TITLE = #{notice_title} 
+    </update>
+    
+    <!-- ( TB_INSTITUTE_NOTICE ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_INSTITUTE_NOTICE
+         WHERE NOTICE_SEQ   = #{notice_seq} 
+           AND NOTICE_TITLE = #{notice_title}
+    </delete>
+     
+</mapper>

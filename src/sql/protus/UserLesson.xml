@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : user_lesson.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_USER_LESSON ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="UserLesson">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_USER_LESSON ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_USER_LESSON
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.LESSON_SEQ LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_USER_LESSON ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT USER_SEQ   -- 사용자 코드 
+             , LESSON_SEQ -- 강의 일련번호
+          FROM TB_USER_LESSON
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.LESSON_SEQ LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_USER_LESSON ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT USER_SEQ   -- 사용자 코드  
+             , LESSON_SEQ -- 강의 일련번호
+          FROM TB_USER_LESSON
+		 WHERE USER_SEQ = #{user_seq} 
+           AND LESSON_SEQ = #{lesson_seq} 
+    </select>    
+
+    <!-- ( TB_USER_LESSON ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_USER_LESSON ( USER_SEQ, LESSON_SEQ )
+        VALUES ( #{user_seq}, #{lesson_seq} )
+    </insert>
+
+    <!-- ( TB_USER_LESSON ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_USER_LESSON
+           SET  
+         WHERE USER_SEQ   = #{user_seq} 
+           AND LESSON_SEQ = #{lesson_seq} 
+    </update>
+    
+    <!-- ( TB_USER_LESSON ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_USER_LESSON
+         WHERE USER_SEQ   = #{user_seq} 
+           AND LESSON_SEQ = #{lesson_seq}
+    </delete>
+     
+</mapper>

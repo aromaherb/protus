@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : community_reply.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_COMMUNITY_REPLY ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="CommunityReply">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_COMMUNITY_REPLY ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_COMMUNITY_REPLY
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.COMMUNITY_SEQ LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_COMMUNITY_REPLY ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT USER_SEQ      -- 댓글 글쓴이 
+             , COMMUNITY_SEQ -- 글 일련번호 
+             , REPLY         -- 댓글 
+             , REPLY_DT -- 답변일자 
+             , REPLY_SEQ     -- 댓글 일련번호
+          FROM TB_COMMUNITY_REPLY
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.COMMUNITY_SEQ LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_COMMUNITY_REPLY ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT USER_SEQ      -- 댓글 글쓴이  
+             , COMMUNITY_SEQ -- 글 일련번호  
+             , REPLY         -- 댓글  
+             , IF(REPLY_DT,date_format(REPLY_DT,'%Y-%m-%d'),'') REPLY_DT -- 답변일자  
+             , REPLY_SEQ     -- 댓글 일련번호
+          FROM TB_COMMUNITY_REPLY
+		 WHERE USER_SEQ = #{user_seq} 
+           AND COMMUNITY_SEQ = #{community_seq} 
+    </select>    
+
+    <!-- ( TB_COMMUNITY_REPLY ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_COMMUNITY_REPLY ( USER_SEQ, COMMUNITY_SEQ, REPLY, REPLY_DT, REPLY_SEQ )
+        VALUES ( #{user_seq}, #{community_seq}, #{reply}, #{reply_dt}, #{reply_seq} )
+    </insert>
+
+    <!-- ( TB_COMMUNITY_REPLY ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_COMMUNITY_REPLY
+           SET REPLY         = #{reply} 
+             , REPLY_DT      = #{reply_dt} 
+             , REPLY_SEQ     = #{reply_seq} 
+         WHERE USER_SEQ      = #{user_seq} 
+           AND COMMUNITY_SEQ = #{community_seq} 
+    </update>
+    
+    <!-- ( TB_COMMUNITY_REPLY ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_COMMUNITY_REPLY
+         WHERE USER_SEQ      = #{user_seq} 
+           AND COMMUNITY_SEQ = #{community_seq}
+    </delete>
+     
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglib_1_1.dtd">
+<taglib>
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>page</shortname>
+    <info>pagination TagLibrary</info>
+    <tag>
+        <name>pagination</name>
+	    <tagclass>kr.co.raon.commons.web.PaginationTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <info>pagination tag</info>
+	    <attribute>
+	      <name>pagingInfo</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+
+	    <attribute>
+	      <name>function</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+		
+    </tag>
+</taglib>

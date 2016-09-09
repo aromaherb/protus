@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : user.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_USER ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="User">
+<!-- 필요한 쿼리 추가할 것 -->
+	<select id="selectCnt">
+		SELECT COUNT(*) FROM TB_USER
+	
+	</select>
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_USER ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_USER
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.EMAIL LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_USER ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT EMAIL        -- 이메일 
+             , USER_NAME    -- 사용자 명 
+             , HP_NUM       -- 핸드폰 
+             , USER_SEQ     -- 사용자 코드 
+             , USER_TYPE    -- 사용자구분 
+             , PASSWD       -- 비밀번호 
+             , USER_AUTH    -- 사용자권한 
+             , REMOVE_YN    -- 삭제여부 
+             , IF(REMOVE_DATE,DATE_FORMAT(REMOVE_DATE,'%Y-%m-%d'),'') REMOVE_DATE 
+             , APP_PHOTO    -- 사진 
+             , APPROVE_YN   -- 승인여부 
+             , APPROVE_TYPE -- 인증타입 
+             , GENDER       -- 성별 
+             , GRADE        -- 학년
+          FROM TB_USER
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.EMAIL LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_USER ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT EMAIL        -- 이메일  
+             , USER_NAME    -- 사용자 명  
+             , HP_NUM       -- 핸드폰  
+             , USER_SEQ     -- 사용자 코드  
+             , USER_TYPE    -- 사용자구분  
+             , PASSWD       -- 비밀번호  
+             , USER_AUTH    -- 사용자권한  
+             , REMOVE_YN    -- 삭제여부  
+             , IF(REMOVE_DATE,DATE_FORMAT(REMOVE_DATE,'%Y-%m-%d'),'') REMOVE_DATE   
+             , APP_PHOTO    -- 사진  
+             , APPROVE_YN   -- 승인여부  
+             , APPROVE_TYPE -- 인증타입  
+             , GENDER       -- 성별  
+             , GRADE        -- 학년
+          FROM TB_USER
+		 WHERE EMAIL = #{email} 
+    </select>    
+
+    <!-- ( TB_USER ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_USER ( EMAIL, USER_NAME, HP_NUM, USER_SEQ, USER_TYPE, PASSWD, USER_AUTH, REMOVE_YN, REMOVE_DATE, APP_PHOTO, APPROVE_YN, APPROVE_TYPE, GENDER, GRADE )
+        VALUES ( #{email}, #{user_name}, #{hp_num}, NULL, #{user_type}, #{passwd}, #{user_auth}, #{remove_yn}, #{remove_date}, #{app_photo}, #{approve_yn}, #{approve_type}, #{gender}, #{grade} )
+    </insert>
+
+    <!-- ( TB_USER ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_USER
+           SET USER_NAME    = #{user_name} 
+             , HP_NUM       = #{hp_num} 
+             , USER_SEQ     = #{user_seq} 
+             , USER_TYPE    = #{user_type} 
+             , PASSWD       = #{passwd} 
+             , USER_AUTH    = #{user_auth} 
+             , REMOVE_YN    = #{remove_yn} 
+             , REMOVE_DATE  = #{remove_date} 
+             , APP_PHOTO    = #{app_photo} 
+             , APPROVE_YN   = #{approve_yn} 
+             , APPROVE_TYPE = #{approve_type} 
+             , GENDER       = #{gender} 
+             , GRADE        = #{grade} 
+         WHERE EMAIL = #{email} 
+    </update>
+    
+    <!-- ( TB_USER ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_USER
+         WHERE EMAIL = #{email}
+    </delete>
+     
+</mapper>

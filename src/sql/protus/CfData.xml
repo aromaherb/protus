@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : cf_data.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_CF_DATA ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="CfData">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_CF_DATA ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_CF_DATA
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.LESSON_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.CF_SEQ LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_CF_DATA ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT LESSON_SEQ -- 강의 일련번호 
+             , CF_SEQ     -- CF_SEQ 
+             , GENDER     -- 성별 
+             , GRADE      -- 학년 
+             , CF_DATE -- 일자 
+             , AGE        -- 나이 
+             , SUBJECT    -- 과목 
+             , COURSE     -- 과정 
+             , CATEGORY   -- 유형
+          FROM TB_CF_DATA
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.LESSON_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.CF_SEQ LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_CF_DATA ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT LESSON_SEQ -- 강의 일련번호  
+             , CF_SEQ     -- CF_SEQ  
+             , GENDER     -- 성별  
+             , GRADE      -- 학년  
+             , IF(CF_DATE,date_format(CF_DATE,'%Y-%m-%d'),'') CF_DATE -- 일자  
+             , AGE        -- 나이  
+             , SUBJECT    -- 과목  
+             , COURSE     -- 과정  
+             , CATEGORY   -- 유형
+          FROM TB_CF_DATA
+		 WHERE LESSON_SEQ = #{lesson_seq} 
+           AND CF_SEQ = #{cf_seq} 
+    </select>    
+
+    <!-- ( TB_CF_DATA ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_CF_DATA ( LESSON_SEQ, CF_SEQ, GENDER, GRADE, CF_DATE, AGE, SUBJECT, COURSE, CATEGORY )
+        VALUES ( #{lesson_seq}, #{cf_seq}, #{gender}, #{grade}, #{cf_date}, #{age}, #{subject}, #{course}, #{category} )
+    </insert>
+
+    <!-- ( TB_CF_DATA ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_CF_DATA
+           SET GENDER     = #{gender} 
+             , GRADE      = #{grade} 
+             , CF_DATE    = #{cf_date} 
+             , AGE        = #{age} 
+             , SUBJECT    = #{subject} 
+             , COURSE     = #{course} 
+             , CATEGORY   = #{category} 
+         WHERE LESSON_SEQ = #{lesson_seq} 
+           AND CF_SEQ     = #{cf_seq} 
+    </update>
+    
+    <!-- ( TB_CF_DATA ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_CF_DATA
+         WHERE LESSON_SEQ = #{lesson_seq} 
+           AND CF_SEQ     = #{cf_seq}
+    </delete>
+     
+</mapper>

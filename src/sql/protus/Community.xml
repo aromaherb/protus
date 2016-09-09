@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : community.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_COMMUNITY ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Community">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_COMMUNITY ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_COMMUNITY
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_COMMUNITY ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT USER_SEQ      -- 글쓴이 
+             , TITLE         -- 제목 
+             , CONTENT       -- 내용 
+             , WRITE_DATE    -- 작성일자 
+             , COMMUNITY_SEQ -- 글 일련번호
+          FROM TB_COMMUNITY
+          ORDER BY COMMUNITY_SEQ DESC
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_COMMUNITY ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT USER_SEQ      -- 글쓴이  
+             , TITLE         -- 제목  
+             , CONTENT       -- 내용  
+             , WRITE_DATE    -- 작성일자  
+             , COMMUNITY_SEQ -- 글 일련번호
+          FROM TB_COMMUNITY
+		 WHERE COMMUNITY_SEQ = #{community_seq} 
+    </select>    
+    
+    <select id="selectMaxSeq" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT MAX(COMMUNITY_SEQ) + 1 COMMUNITY_SEQ 
+          FROM TB_COMMUNITY
+          
+    </select> 
+
+    <!-- ( TB_COMMUNITY ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_COMMUNITY ( USER_SEQ, TITLE, CONTENT, WRITE_DATE )
+        VALUES ( #{user_seq}, #{title}, #{content}, #{write_date} )
+    </insert>
+
+    <!-- ( TB_COMMUNITY ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_COMMUNITY
+           SET TITLE         = #{title} 
+             , CONTENT       = #{content} 
+             , WRITE_DATE    = #{write_date} 
+             , COMMUNITY_SEQ = #{community_seq} 
+         WHERE COMMUNITY_SEQ = #{community_seq} 
+    </update>
+    
+    <!-- ( TB_COMMUNITY ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_COMMUNITY
+         WHERE COMMUNITY_SEQ = #{community_seq}
+    </delete>
+     
+</mapper>

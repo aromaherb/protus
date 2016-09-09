@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : institute_teacher.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_INSTITUTE_TEACHER ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="InstituteTeacher">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_INSTITUTE_TEACHER ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_INSTITUTE_TEACHER
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.ETC LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_INSTITUTE_TEACHER ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT USER_SEQ      -- 사용자 코드 
+             , ETC           -- 비고 
+             , APPROVE_DATE -- 승인일자 
+             , INSTITUTE_SEQ -- 학원일련번호
+          FROM TB_INSTITUTE_TEACHER
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.USER_SEQ LIKE #{search_word} || '%'
+			     </if>
+			  	 <if test="search_word2 != null and ( search_word2 neq ''.toString() )">
+			  	    AND A.ETC LIKE #{search_word2} || '%'
+			  	 </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_INSTITUTE_TEACHER ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT USER_SEQ      -- 사용자 코드  
+             , ETC           -- 비고  
+             , IF(APPROVE_DATE,date_format(APPROVE_DATE,'%Y-%m-%d'),'') APPROVE_DATE -- 승인일자  
+             , INSTITUTE_SEQ -- 학원일련번호
+          FROM TB_INSTITUTE_TEACHER
+		 WHERE USER_SEQ = #{user_seq} 
+           AND ETC = #{etc} 
+    </select>    
+
+    <!-- ( TB_INSTITUTE_TEACHER ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_INSTITUTE_TEACHER ( USER_SEQ, ETC, APPROVE_DATE, INSTITUTE_SEQ )
+        VALUES ( #{user_seq}, #{etc}, #{approve_date}, #{institute_seq} )
+    </insert>
+
+    <!-- ( TB_INSTITUTE_TEACHER ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_INSTITUTE_TEACHER
+           SET APPROVE_DATE  = #{approve_date} 
+             , INSTITUTE_SEQ = #{institute_seq} 
+         WHERE USER_SEQ = #{user_seq} 
+           AND ETC      = #{etc} 
+    </update>
+    
+    <!-- ( TB_INSTITUTE_TEACHER ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_INSTITUTE_TEACHER
+         WHERE USER_SEQ = #{user_seq} 
+           AND ETC      = #{etc}
+    </delete>
+     
+</mapper>

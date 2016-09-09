@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/***************************************************************************************************
+ * 파일명 : promotion.xml
+ * 작성자 : 장재현 (jang1945@raonsolution.co.kr)
+ * 작성일 : 2016-8-19
+ * 내  용 : ( TB_PROMOTION ) 의 인덱스 목록/목록/목록 개수/상세정보/삽입/수정/삭제/전체삭제 DB쿼리문
+ ***************************************************************************************************/
+-->
+<mapper namespace="Promotion">
+<!-- 필요한 쿼리 추가할 것 -->
+
+
+<!-- 기본 제공 손대지 말 것 -->
+	<!--  ( TB_PROMOTION ) 목록 개수 -->
+    <select id="selectListCnt" parameterType="hashmap" resultType="int" useCache="false" flushCache="true">
+        SELECT COUNT(*) CNT 
+          FROM TB_PROMOTION
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.PROMOTION_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+    </select>
+    
+	<!--  ( TB_PROMOTION ) 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap" useCache="false" flushCache="true">
+        SELECT PROMOTION_SEQ -- 프로모션 일련번호 
+             , PROMOTION_CD  -- 프로모션 코드 
+             , STATR_DATE -- 시작일자 
+             , END_DATE -- 종료일자 
+             , USE_YN        -- 사용여부 
+             , USE_DATE -- 사용일자 
+             , USER_SEQ      -- 사용자 코드
+          FROM TB_PROMOTION
+          <where>
+			     <if test="search_word != null and ( search_word neq ''.toString() )">
+			     	A.PROMOTION_SEQ LIKE #{search_word} || '%'
+			     </if>
+          </where>
+          limit  #{start_of_page}  , #{cnt_per_page}
+    </select>
+    
+    <!--  ( TB_PROMOTION ) 상세정보 -->
+    <select id="selectData" parameterType="hashmap" resultType="hashmap" useCache="false">
+        SELECT PROMOTION_SEQ -- 프로모션 일련번호  
+             , PROMOTION_CD  -- 프로모션 코드  
+             , IF(STATR_DATE,date_format(STATR_DATE,'%Y-%m-%d'),'') STATR_DATE -- 시작일자  
+             , IF(END_DATE,date_format(END_DATE,'%Y-%m-%d'),'') END_DATE -- 종료일자  
+             , USE_YN        -- 사용여부  
+             , IF(USE_DATE,date_format(USE_DATE,'%Y-%m-%d'),'') USE_DATE -- 사용일자  
+             , USER_SEQ      -- 사용자 코드
+          FROM TB_PROMOTION
+		 WHERE PROMOTION_SEQ = #{promotion_seq} 
+    </select>    
+
+    <!-- ( TB_PROMOTION ) 삽입 -->
+    <insert id="insert" parameterType="hashmap">
+        INSERT INTO TB_PROMOTION ( PROMOTION_SEQ, PROMOTION_CD, STATR_DATE, END_DATE, USE_YN, USE_DATE, USER_SEQ )
+        VALUES ( #{promotion_seq}, #{promotion_cd}, #{statr_date}, #{end_date}, #{use_yn}, #{use_date}, #{user_seq} )
+    </insert>
+
+    <!-- ( TB_PROMOTION ) 수정 -->
+    <update id="update" parameterType="hashmap">
+        UPDATE TB_PROMOTION
+           SET PROMOTION_CD  = #{promotion_cd} 
+             , STATR_DATE    = #{statr_date} 
+             , END_DATE      = #{end_date} 
+             , USE_YN        = #{use_yn} 
+             , USE_DATE      = #{use_date} 
+             , USER_SEQ      = #{user_seq} 
+         WHERE PROMOTION_SEQ = #{promotion_seq} 
+    </update>
+    
+    <!-- ( TB_PROMOTION ) 삭제 -->
+    <delete id="delete" parameterType="hashmap">
+        DELETE FROM TB_PROMOTION
+         WHERE PROMOTION_SEQ = #{promotion_seq}
+    </delete>
+     
+</mapper>
